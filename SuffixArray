@@ -290,12 +290,6 @@ public :
 
 };
 
-
-
-
-
-
-
 int main()
 {
     SuffixArray t("ACGACTACGATAAC$");
