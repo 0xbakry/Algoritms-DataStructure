@@ -1,1 +1,1 @@
-(Huffman-SuffixArray-CarFueling-knapsack-primitive_calculator)
+Problem Solving Assignments
