@@ -1,0 +1,52 @@
+
+/**
+ *
+ * @author omarb
+ */
+public class Tag {
+     private int pos, len; 
+     private char next;
+     Tag() {};
+     Tag(int pos, int len, char sym)
+       {
+            pos = pos;
+            len = len;
+            next = sym;
+        }
+	
+      public void printTag() 
+        {
+            System.out.print("<" + pos + ", " + len + ", '" + next + "'>");
+        }
+      
+      public int getLen()
+      {
+          return len;
+      }
+      
+      public int getPos()
+      {
+          return pos;
+      }
+       public char getNext()
+      {
+          return next;
+      }
+      
+      public void setLen(int l)
+      {
+          len =l;
+      }
+            
+      public void setPos(int p)
+      {
+          pos = p;
+      }
+      
+        public void setNext(char n)
+      {
+          next = n;
+      }
+      
+    
+}
