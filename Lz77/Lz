@@ -1,0 +1,211 @@
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Scanner;
+
+/**
+ *
+ * @author omarbakry
+ */
+
+public class Lz {
+    
+    String data = " ";
+    char next;
+    ArrayList <Tag> myTags = new ArrayList <Tag>();
+    
+     /****PRINT TAGS****/
+    private void printAllTags() 
+         {
+		for(int i = 0; i < myTags.size(); i++) {
+			myTags.get(i).printTag();
+			System.out.print(" ");
+		}
+		
+		System.out.print("\n");
+         }
+    
+ 
+        /****COMPRESSION FUN****/
+    public void compress(String data)
+      {
+          
+        int lookSize = 13, searchSize = 6;   /***BUFFER SIZE****/
+                 
+           if (!data.isEmpty())
+           {
+            int searchStart = 0, searchEnd = 0, lookStart= 1, lookEnd = lookSize;
+            int dataSize = data.length();
+             
+            Tag firstTag = new Tag(0,0, data.charAt(0));
+            myTags.add(firstTag);
+             
+            while (dataSize - lookStart > 1 )
+              {
+                     Tag tag = new Tag(0,0, ' ');
+                     tag = find(tag, data, searchStart, searchEnd, lookStart, lookEnd);
+                     myTags.add(tag);  
+
+                     searchEnd += tag.getLen() + 1;   
+                     if(searchSize > searchEnd)
+                                searchStart = 0;
+                                else
+                                    searchStart = searchEnd - searchSize;
+
+                            lookStart = searchEnd + 1; 
+                            if (dataSize - lookStart < lookSize)
+                                lookEnd = dataSize - 1;
+                                else
+                                    lookEnd = lookStart + lookSize;
+
+              }
+              
+            boolean x = true;
+            if (myTags.size() == 2)
+            {
+            lookStart = lookEnd;
+            searchEnd = lookEnd;
+            x=false;
+            }
+            
+            Tag lastTag = new Tag();
+            while(x)
+               {
+                    while (searchEnd - searchStart >= 0)
+                       {
+                            if (data.charAt(searchEnd) == data.charAt(lookStart))
+                               { 
+                                lastTag.setPos(lookStart - searchEnd);
+                                lastTag.setLen(1);
+                                lastTag.setNext(' ');      
+                                myTags.add(lastTag);
+                                x = false;
+                                break;
+                                }
+                        searchEnd -= 1;
+                        }
+
+                   if (dataSize - searchStart == lookStart)
+                   {    lastTag = new Tag(0, 0, data.charAt(lookStart)); 
+                        myTags.add(lastTag);
+                        x = false;
+                   }
+                    else
+                        {
+                         searchEnd = searchStart - 1;
+                         searchStart = searchEnd - searchSize;
+                        }
+               }
+            
+            System.out.println("Your Tags: ");
+            printAllTags();
+
+           }
+           
+            else
+                System.out.println("Data is empty");  
+    
+       }
+    
+    
+            /******TO FIND THE LONGEST MATCHH*****/
+    Tag find (Tag tag, String data, int searchStart, int searchEnd, int lookStart, int lookEnd)
+      {
+        int position = 0, max=0, length =0;
+               
+        while (searchStart <= searchEnd)
+            {
+                length = 0;
+                if (data.charAt(lookStart) == data.charAt(searchEnd))
+                  {
+                        int searchCount = searchEnd, lookCount = lookStart; 
+                        while (data.charAt(searchCount) == data.charAt(lookCount))
+                           {
+                              length++;
+                              searchCount++; 
+                              if (lookCount == data.length() - 1)
+                                  break;
+                              else
+                                  lookCount++;
+                           }
+
+                        if (max <= length)
+                           {   
+                               max = length; 
+                               position = lookStart - searchEnd;
+                               next = data.charAt(lookCount);
+                            }
+
+                        if (!(max+lookStart == lookEnd))
+                                 searchEnd -= 1;
+                            else 
+                               break;
+                    }
+                     
+                    else
+                       searchEnd -= 1;
+               }
+               
+               if (length == 0)
+                   tag.setNext(data.charAt(lookStart));
+                  else
+                    tag.setNext(next);
+               
+                tag.setLen(max);
+                tag.setPos(position);
+                return tag;
+                    
+         }
+     
+    
+    /*****DECOMPRESSION FUN*****/
+    
+    
+    void decompress()
+    {
+       StringBuilder myData = new StringBuilder();
+       Iterator <Tag>iterator = myTags.iterator();
+       
+              while(iterator.hasNext())
+              {
+                    Tag new_Tag = iterator.next();
+
+                    if(new_Tag.getLen() == 0)
+                      myData.append(new_Tag.getNext());
+
+                    else
+                    {
+                      for(int i = 0;i < new_Tag.getLen();i++)
+                      {
+                        char startIndx = myData.charAt(myData.length() - new_Tag.getPos());
+                        myData.append(startIndx);
+                      }
+                      myData.append(new_Tag.getNext());
+                }
+              }
+              
+        String string = myData.toString();
+        System.out.println("Your Data is: ");
+        System.out.println(string);
+  }
+    
+
+    
+     
+    
+    public static void main (String[] args)
+    {
+        
+       
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the string");
+        String inp = sc.nextLine();
+        
+        Lz lz = new Lz();
+        lz.compress(inp);
+        lz.decompress();
+   
+    }
+        
+}
+    
+
