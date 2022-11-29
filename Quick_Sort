@@ -1,0 +1,77 @@
+#include <iostream>
+#include<vector>
+using namespace std;
+
+long long m_z = 5265, m_w = 2513;
+int get_random()
+{
+	m_z = 36969 * (m_z & 65535) + (m_z >> 16);
+	m_w = 18000 * (m_w & 65535) + (m_w >> 16);
+	long long res = (m_z << 16) + m_w;
+	return res % 1000000000;
+}
+
+
+void swap(int* a, int* b)
+{
+	int t = *a;
+	*a = *b;
+	*b = t;
+}
+int partition( int arr[], int start, int end)
+{
+	int p = start + (rand() % (int)(end -start + 1));
+	swap(&arr[p], &arr[end]);
+	int pivot = arr[end];
+	int firsthigh = start;
+	
+	for (int i = start; i < end; i++)
+		if (arr[i] < pivot)
+		{      
+			swap(&arr[i], &arr[firsthigh]);
+			firsthigh++;
+		}
+
+	swap(&arr[end], &arr[firsthigh]);
+
+	return firsthigh;
+}
+void quicksort(int arr[], int start, int end)
+{
+	if (start < end)
+	{
+		int q = partition(arr, start, end);
+		quicksort(arr, start, q-1);
+		quicksort(arr, q + 1, end);
+		
+	}
+}
+
+
+
+
+int main()
+{
+	int n;
+	int k = 0;
+	cout << "Enter your n" << endl;
+	cin >> n;
+
+	int* arr2;
+	arr2 = new int[n];
+
+	for (int i = 0; i <= n; i++)
+	{
+		arr2[i] = get_random();
+	}
+	
+	quicksort(arr2, 0, n);
+
+	for (int i =0; i<=n; i++)
+		cout << arr2[i] << endl;
+
+	cout<<"Enter kth elemnt"<<endl;
+	cin >> k;
+	cout << "The number is: "<< arr2[k] << endl;
+	system("pause");
+}
