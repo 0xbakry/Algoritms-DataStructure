@@ -1,0 +1,74 @@
+#include <iostream>
+
+using namespace std;
+
+
+#define numOfVertices 7
+
+int minKey(int key[], bool mstSet[])
+{
+    int min = INT_MAX, min_index;
+    for (int i = 0; i < numOfVertices; i++)
+        if (mstSet[i] == false && key[i] < min)
+            min = key[i], min_index = i;
+
+    return min_index;
+}
+
+
+void printMST(int parent[], int graph[numOfVertices][numOfVertices])
+{
+    cout << "Edge \tWeight\n";
+    for (int i = 1; i < numOfVertices; i++)
+        cout << "v" << parent[i]+1 << " - " << "v" << i+1 << " \t" << graph[i][parent[i]] << " \n";
+}
+
+
+void primMST(int graph[numOfVertices][numOfVertices])
+{
+
+    int parent[numOfVertices];
+    int key[numOfVertices];
+    bool mstSet[numOfVertices];
+
+    for (int i = 0; i < numOfVertices; i++)
+        key[i] = INT_MAX, mstSet[i] = false;
+
+    key[0] = 0;
+    parent[0] = -1;
+
+
+    for (int count = 0; count < numOfVertices - 1; count++)
+    {
+
+        int mini_key_vertix = minKey(key, mstSet);
+        mstSet[mini_key_vertix] = true;
+
+
+        for (int i = 0; i < numOfVertices; i++)
+            if (graph[mini_key_vertix][i] && mstSet[i] == false && graph[mini_key_vertix][i] < key[i])
+                parent[i] = mini_key_vertix, key[i] = graph[mini_key_vertix][i];
+    }
+
+    printMST(parent, graph);
+}
+
+
+int main()
+{
+
+    int graph[numOfVertices][numOfVertices] =
+    {
+     { 0,2,4,1,0,0,0 },
+     { 2, 0, 0,3,10,0,0},
+     {4,0,0,2,0,5,0 },
+     { 1,3,2,0,7,8,4 },
+     { 0,10,0,7,0,0,6 },
+     { 0,0,5,8,0,0,1 },
+     { 0,0,0,0,6,1,0 }
+    };
+    primMST(graph);
+
+    system("pause");
+}
+
