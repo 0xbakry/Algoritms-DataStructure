@@ -14,7 +14,8 @@ class Solution:
         ### O (n) ==> Where n is the list size. ###
         """
         
-        if k > len(nums): k -= len(nums)
+         while(k>len(nums)):
+             k -= len(nums)
         nums.reverse()
         nums[k:] = reversed(nums[k:])
         nums[:k] = reversed(nums[:k])
