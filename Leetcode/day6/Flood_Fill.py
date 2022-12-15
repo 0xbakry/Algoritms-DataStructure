@@ -28,4 +28,49 @@ class Solution:
         fill(sr, sc)
         return image
 
+"""
+Another sol. with less time:
+"""
+
+class Solution:
+    def floodFill(self, image: List[List[int]], sr: int, sc: int, color: int) -> List[List[int]]:
+       
+        if image[sr][sc] == color: return image
+
+        m, n= len(image), len(image[0])
+        old_color = image[sr][sc]
+        result = image.copy()
+
+        queue = []
+        queue.append([sr, sc])
+        result[sr][sc] = color
+
+        while queue:
+            current = queue.pop()
+            sr_pos = current [0]
+            sc_pos = current [1]
+
+            if (sr_pos+1) < m and image[sr_pos+1][sc_pos] == old_color:
+                result[sr_pos+1][sc_pos] = color
+                queue.append([sr_pos+1, sc_pos])   
+                
+                print ("old: ", old_color)
+                print ("new: ", color)
+                
+            if (sr_pos-1) >= 0 and image[sr_pos-1][sc_pos] == old_color:
+
+                result[sr_pos-1][sc_pos] = color
+                queue.append([sr_pos-1, sc_pos])                
+
+            if (sc_pos+1) < n and image[sr_pos][sc_pos+1] == old_color:
+
+                result[sr_pos][sc_pos+1] = color
+                queue.append([sr_pos, sc_pos+1])     
+                   
+            if (sc_pos-1) >= 0 and image[sr_pos][sc_pos-1] == old_color:
+
+                result[sr_pos][sc_pos-1] = color
+                queue.append([sr_pos, sc_pos-1])     
+        
+        return result
 
